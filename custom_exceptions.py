@@ -1,0 +1,1 @@
+class _MatchBreak(Exception): pass
