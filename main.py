@@ -4,13 +4,12 @@
 import os
 import sys
 import multiprocessing
-import sympy as sp
 from Integrals import double_integration
 from Integrals import single_integration
 from InputOutputOperations.menu_print_options import *
 from InputOutputOperations.main_menu import MainMenu
 from shared.custom_exceptions import MatchBreak
-from shared import constants as const
+import shared.constants as const
 
 
 def get_cpu_core_count():
@@ -36,54 +35,42 @@ if __name__ == '__main__':
     hyper_threading = False
     core_count = get_cpu_core_count()
     main_menu = MainMenu()
-    global num_thread
+    global num_threads
     if len(sys.argv) > 1 and sys.argv[1] == "--h":
-        num_thread = core_count-1 * 2
+        num_threads = core_count//3
     else:
-        num_thread = core_count
+        num_threads = core_count//2
+    print("thread count: ", num_threads)
     while main_menu.display_menu().isnumeric():
-        complete = False
         try:
             match int(main_menu.options):
                 case 1:
-                    while not complete:
-                        print("\ninput E, Exit, or Break to go back to previous menu")
-                        x_inputs = get_integral_inputs('x', get_function=True)
-                        try:
-                            match get_single_integral_options():
-                                case 1:
-                                    x_inputs[const.TOTAL_SQUARES] = get_numerical_input('Enter number of dx squares: ', True)
-                                    single_integration.calculate_riemann_sums(x_inputs)
-                                case _:
-                                    single_integration.solve_single_integral(x_inputs)
-                            complete = True
-                        except sp.SympifyError:
-                            print("invalid expression provided")
-                        except ValueError:
-                            print("invalid expression provided")
-                        except SyntaxError:
-                            print("invalid expression provided")
+                    print("\ninput E, Exit, or Break to go back to previous menu")
+                    x_inputs = get_integral_inputs('x')
+                    x_inputs[const.FUNCTION] = get_function(['x'])
+                    match get_integral_options():
+                        case 1:
+                            x_inputs[const.TOTAL_SQUARES] = get_numerical_input('Enter number of dx squares: ', integer=True)
+                            single_integration.calculate_riemann_sums(x_inputs)
+                        case _:
+                            single_integration.solve_single_integral(x_inputs)
                 case 2:
-                    while not complete:
-                        print("\ninput E, Exit, or Break to go back to previous menu")
-                        complete = False
-                        inputs = {'x': get_integral_inputs('x'),
-                                  'y': get_integral_inputs('y', get_function=True)}
-                        try:
-                            match get_single_integral_options():
-                                case 1:
-                                    inputs['x'][const.TOTAL_SQUARES] = get_numerical_input("Number of dx squares: ", True)
-                                    inputs['y'][const.TOTAL_SQUARES] = get_numerical_input("Number of dy squares", True)
-                                    double_integration.calculate_double_riemann(inputs)
-                                case _:
-                                    double_integration.solve_double_integral(inputs)
-                        except sp.SympifyError:
-                            print("invalid expression provided")
-                        except ValueError:
-                            print("invalid expression provided")
-                        except SyntaxError:
-                            print("invalid expression provided")
-                        print("case: ", 2)
+                    print("\ninput E, Exit, or Break to go back to previous menu")
+                    match get_integral_options():
+                        case 1:
+                            inputs = {'x': get_integral_inputs('x', numerical_inputs=True),
+                                      'y': get_integral_inputs('y', numerical_inputs=True),
+                                      const.FUNCTION: get_function(['x', 'y'])}
+                            inputs['x'][const.TOTAL_SQUARES] = get_numerical_input("Number of dx squares: ", integer=True)
+                            inputs['y'][const.TOTAL_SQUARES] = get_numerical_input("Number of dy squares: ", integer=True)
+                            doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs, is_riemann=True)
+                            doubleIntegrationCalculator.calculate_double_riemann(num_threads)
+                        case _:
+                            inputs = {'x': get_integral_inputs('x'),
+                                      'y': get_integral_inputs('y'),
+                                      const.FUNCTION: get_function(['x', 'y'])}
+                            doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs)
+                            doubleIntegrationCalculator.solve_double_integral()
                 case 3:
                     print("\ninput E, Exit, or Break to go back to previous menu")
                     print("case: ", 3)
