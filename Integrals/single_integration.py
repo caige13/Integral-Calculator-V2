@@ -7,7 +7,7 @@ def calculate_riemann_sums(inputs):
     start = inputs[const.START]
     end = inputs[const.END]
     total_squares = inputs[const.TOTAL_SQUARES]
-    function = sp.parse_expr(inputs[const.FUNCTION])
+    function = inputs[const.FUNCTION]
     start, end = converter.convert_start_end(start, end)
     delta = (end - start)/total_squares
     left_sum = right_sum = middle_sum = 0
@@ -25,7 +25,7 @@ def calculate_riemann_sums(inputs):
 
 def solve_single_integral(inputs):
     solution = sp.integrate(
-        sp.parse_expr(inputs[const.FUNCTION]),
+        inputs[const.FUNCTION],
         (
             sp.symbols('x'),
             inputs[const.START],
