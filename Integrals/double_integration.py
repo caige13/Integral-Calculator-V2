@@ -1,13 +1,11 @@
 import sympy as sp
-import threading
 import multiprocessing
 import shared.constants as const
-import psutil
 from sympy.integrals import integrate
 
 
 class DoubleIntegrationCalculator:
-    def __init__(self, inputs, is_riemann):
+    def __init__(self, inputs, is_riemann=False):
         self.x = sp.Symbol('x')
         self.y = sp.Symbol('y')
         self.end_x = inputs['x'][const.END]
@@ -54,17 +52,20 @@ class DoubleIntegrationCalculator:
         with lock:
             sums[endpoint].value += local_sum
 
-    def calculate_double_riemann(self, num_threads):
+    def calculate_double_riemann(self, num_processes):
         endpoints = ['upper_left', 'upper_right', 'lower_left', 'lower_right', 'middle']
         sums = {endpoint: multiprocessing.Value('d', 0.0) for endpoint in endpoints}
         lock = multiprocessing.Lock()
 
         processes = []
-        rectangles_per_thread = self.num_rectangles_x // num_threads
+        rectangles_per_process = self.num_rectangles_x // num_processes
         for endpoint in endpoints:
-            for i in range(num_threads):
-                start_i = i * rectangles_per_thread
-                end_i = start_i + rectangles_per_thread
+            for i in range(num_processes):
+                start_i = i * rectangles_per_process
+                if i < num_processes - 1:
+                    end_i = start_i + rectangles_per_process
+                else:
+                    end_i = self.num_rectangles_x
                 process = multiprocessing.Process(
                     target=self.calculate_riemann_sum_multiprocessing,
                     args=(endpoint, start_i, end_i, sums, lock)
