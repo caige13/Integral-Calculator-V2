@@ -3,8 +3,10 @@ import multiprocessing
 import shared.constants as const
 from sympy.integrals import integrate
 
+from Integrals.Interfaces.BaseIntegral import BaseIntegration
 
-class DoubleIntegrationCalculator:
+
+class DoubleIntegrationCalculator(BaseIntegration):
     def __init__(self, inputs, is_riemann=False):
         self.x = sp.Symbol('x')
         self.y = sp.Symbol('y')

@@ -4,8 +4,8 @@
 import os
 import sys
 import multiprocessing
-from Integrals import double_integration
-from Integrals import single_integration
+from Integrals import DoubleIntegration
+from Integrals import SingleIntegration
 from InputOutputOperations.menu_print_options import *
 from InputOutputOperations.main_menu import MainMenu
 from shared.custom_exceptions import MatchBreak
