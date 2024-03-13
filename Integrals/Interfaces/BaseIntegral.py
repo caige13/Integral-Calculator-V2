@@ -1,14 +1,19 @@
 import sympy as sp
 import multiprocessing
 import shared.constants as const
+from Integrals.Integral import Integral
+
 
 class BaseIntegration():
-    def __init__(self, integrals, function):
+    def __init__(self, integrals: [Integral], function: sp.Expr):
         self.integrals = integrals
         self.function = function
 
     def solve_integral(self):
-        raise NotImplementedError("Subclass must implement abstract method")
+        answer = self.function
+        for integral in self.integrals:
+            answer = integral.integrate(answer)
+        print("Result of the double integral: ", answer)
 
     def calculate_riemann_sum(self, endpoint, start_i, end_i):
         raise NotImplementedError("Subclass must implement abstract method")

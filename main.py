@@ -64,13 +64,13 @@ if __name__ == '__main__':
                             inputs['x'][const.TOTAL_SQUARES] = get_numerical_input("Number of dx squares: ", integer=True)
                             inputs['y'][const.TOTAL_SQUARES] = get_numerical_input("Number of dy squares: ", integer=True)
                             doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs, is_riemann=True)
-                            doubleIntegrationCalculator.calculate_double_riemann(num_threads)
+                            doubleIntegrationCalculator.calculate_integral(num_threads)
                         case _:
                             inputs = {'x': get_integral_inputs('x'),
                                       'y': get_integral_inputs('y'),
                                       const.FUNCTION: get_function(['x', 'y'])}
                             doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs)
-                            doubleIntegrationCalculator.solve_double_integral()
+                            doubleIntegrationCalculator.solve_integral()
                 case 3:
                     print("\ninput E, Exit, or Break to go back to previous menu")
                     print("case: ", 3)

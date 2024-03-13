@@ -7,26 +7,6 @@ from Integrals.Interfaces.BaseIntegral import BaseIntegration
 
 
 class DoubleIntegrationCalculator(BaseIntegration):
-    def __init__(self, inputs, is_riemann=False):
-        self.x = sp.Symbol('x')
-        self.y = sp.Symbol('y')
-        self.end_x = inputs['x'][const.END]
-        self.start_x = inputs['x'][const.START]
-        self.end_y = inputs['y'][const.END]
-        self.start_y = inputs['y'][const.START]
-        self.function = inputs[const.FUNCTION]
-
-        if is_riemann:
-            self.num_rectangles_x = inputs['x'][const.TOTAL_SQUARES]
-            self.num_rectangles_y = inputs['y'][const.TOTAL_SQUARES]
-            self.delta_x = (self.end_x - self.start_x) / self.num_rectangles_x
-            self.delta_y = (self.end_y - self.start_y) / self.num_rectangles_y
-            self.delta_area =  self.delta_x * self.delta_y
-
-    def solve_double_integral(self):
-        result = integrate(integrate(self.function, (self.x, self.start_x, self.end_x)), (self.y, self.start_y, self.end_y))
-        print("Result of the double integral:", result)
-
     def calculate_riemann_sum(self, endpoint, start_i, end_i):
         total_sum = 0
         for i in range(start_i, end_i):
@@ -54,7 +34,12 @@ class DoubleIntegrationCalculator(BaseIntegration):
         with lock:
             sums[endpoint].value += local_sum
 
-    def calculate_double_riemann(self, num_processes):
+    def calculate_integral(self, num_processes, inputs):
+        self.num_rectangles_x = inputs['x'][const.TOTAL_SQUARES]
+        self.num_rectangles_y = inputs['y'][const.TOTAL_SQUARES]
+        self.delta_x = (self.end_x - self.start_x) / self.num_rectangles_x
+        self.delta_y = (self.end_y - self.start_y) / self.num_rectangles_y
+        self.delta_area = self.delta_x * self.delta_y
         endpoints = ['upper_left', 'upper_right', 'lower_left', 'lower_right', 'middle']
         sums = {endpoint: multiprocessing.Value('d', 0.0) for endpoint in endpoints}
         lock = multiprocessing.Lock()
