@@ -9,7 +9,9 @@ class MainMenu:
         print("3. Triple Integral Calculator")
         print("4. Anti Derivative of a Function")
         print("5. Derivative of a Function")
-        print("6. Library of Python Symbols(Have to use these)")
-        print("7. Exit")
+        print("6. Riemann/Manual Sums of Functions")
+        print("7. Library of Python Symbols(Have to use these)")
+        print("8. Exit")
         self.options = input("Which option? ")
         return self.options
+

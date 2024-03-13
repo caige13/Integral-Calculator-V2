@@ -6,7 +6,7 @@ class Integral:
     def __init__(self, symbol, inputs, is_riemann=False):
         self.symbol = sp.Symbol(symbol)
         self.start = inputs[const.START]
-        self.end = inputs[const.END] 
+        self.end = inputs[const.END]
         if is_riemann:
             self.num_rectangles = inputs[const.TOTAL_SQUARES]
             self.delta = (self.end - self.start) / self.num_rectangles

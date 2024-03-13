@@ -3,7 +3,7 @@ import multiprocessing
 import shared.constants as const
 from sympy.integrals import integrate
 
-from Integrals.Interfaces.BaseIntegral import BaseIntegration
+from Integrals.Interfaces.BaseIntegration import BaseIntegration
 
 
 class DoubleIntegrationCalculator(BaseIntegration):

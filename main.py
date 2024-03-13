@@ -8,6 +8,8 @@ from Integrals import DoubleIntegration
 from Integrals import SingleIntegration
 from InputOutputOperations.menu_print_options import *
 from InputOutputOperations.main_menu import MainMenu
+from Integrals.Integral import Integral
+from Integrals.SingleIntegration import SingleIntegrationCalculator
 from shared.custom_exceptions import MatchBreak
 import shared.constants as const
 
@@ -51,26 +53,30 @@ if __name__ == '__main__':
                     match get_integral_options():
                         case 1:
                             x_inputs[const.TOTAL_SQUARES] = get_numerical_input('Enter number of dx squares: ', integer=True)
-                            single_integration.calculate_riemann_sums(x_inputs)
+                            single_integration_calculator = SingleIntegrationCalculator(
+                                Integral('x', x_inputs, is_riemann=True), x_inputs[const.FUNCTION])
+                            single_integration_calculator.calculate_integral(num_threads, x_inputs)
                         case _:
-                            single_integration.solve_single_integral(x_inputs)
-                case 2:
-                    print("\ninput E, Exit, or Break to go back to previous menu")
-                    match get_integral_options():
-                        case 1:
-                            inputs = {'x': get_integral_inputs('x', numerical_inputs=True),
-                                      'y': get_integral_inputs('y', numerical_inputs=True),
-                                      const.FUNCTION: get_function(['x', 'y'])}
-                            inputs['x'][const.TOTAL_SQUARES] = get_numerical_input("Number of dx squares: ", integer=True)
-                            inputs['y'][const.TOTAL_SQUARES] = get_numerical_input("Number of dy squares: ", integer=True)
-                            doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs, is_riemann=True)
-                            doubleIntegrationCalculator.calculate_integral(num_threads)
-                        case _:
-                            inputs = {'x': get_integral_inputs('x'),
-                                      'y': get_integral_inputs('y'),
-                                      const.FUNCTION: get_function(['x', 'y'])}
-                            doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs)
-                            doubleIntegrationCalculator.solve_integral()
+                            single_integration_calculator = SingleIntegrationCalculator(
+                                Integral('x', x_inputs), x_inputs[const.FUNCTION])
+                            single_integration_calculator.solve_integral()
+                # case 2:
+                    # print("\ninput E, Exit, or Break to go back to previous menu")
+                    # match get_integral_options():
+                    #     case 1:
+                    #         inputs = {'x': get_integral_inputs('x', numerical_inputs=True),
+                    #                   'y': get_integral_inputs('y', numerical_inputs=True),
+                    #                   const.FUNCTION: get_function(['x', 'y'])}
+                    #         inputs['x'][const.TOTAL_SQUARES] = get_numerical_input("Number of dx squares: ", integer=True)
+                    #         inputs['y'][const.TOTAL_SQUARES] = get_numerical_input("Number of dy squares: ", integer=True)
+                    #         doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs, is_riemann=True)
+                    #         doubleIntegrationCalculator.calculate_integral(num_threads)
+                    #     case _:
+                    #         inputs = {'x': get_integral_inputs('x'),
+                    #                   'y': get_integral_inputs('y'),
+                    #                   const.FUNCTION: get_function(['x', 'y'])}
+                    #         doubleIntegrationCalculator = double_integration.DoubleIntegrationCalculator(inputs)
+                    #         doubleIntegrationCalculator.solve_integral()
                 case 3:
                     print("\ninput E, Exit, or Break to go back to previous menu")
                     print("case: ", 3)
@@ -82,8 +88,12 @@ if __name__ == '__main__':
                     print("case: ", 5)
                 case 6:
                     print("\ninput E, Exit, or Break to go back to previous menu")
+
                     print("case: ", 6)
                 case 7:
+                    print("\ninput E, Exit, or Break to go back to previous menu")
+                    print("case: ", 7)
+                case 8:
                     break
                 case _:
                     print("that is not an option :)")

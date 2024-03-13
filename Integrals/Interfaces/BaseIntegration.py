@@ -21,5 +21,5 @@ class BaseIntegration():
     def calculate_riemann_sum_multiprocessing(self, endpoint, start_i, end_i, sums, lock):
         raise NotImplementedError("Subclass must implement abstract method")
 
-    def calculate_integral(self, num_processes):
+    def calculate_integral(self, num_processes, total_squares):
         raise NotImplementedError("Subclass must implement abstract method")
